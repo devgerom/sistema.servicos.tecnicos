@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Serviço</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <img src="{{ url_for('static', filename='images/logo.termico.png') }}" alt="Dr. Eletron Logo" class="header-logo">
+                <div class="header-text">
+                    <h1>✏️ Editar Serviço</h1>
+                    <p>Atualize os dados do serviço</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="menu">
+            <a href="/">🏠 Início</a>
+            <a href="{{ url_for('clientes') }}">📝 Cadastrar Cliente</a>
+            <a href="{{ url_for('buscar') }}">🔍 Buscar Cliente</a>
+            <a href="{{ url_for('servicos') }}">🔧 Cadastrar Serviço</a>
+        </div>
+        
+        <div class="content">
+            {% if mensagem %}
+                <div class="alert alert-success">
+                    {{ mensagem }}
+                </div>
+            {% endif %}
+            
+            <div class="card">
+                <h2>✏️ Editando Serviço</h2>
+                
+                <form action="" method="post">
+                    <div class="form-group">
+                        <label for="cliente_id">Cliente:</label>
+                        <select name="cliente_id" id="cliente_id" required>
+                            {% for cliente in clientes %}
+                                <option value="{{ cliente.id }}" {% if cliente.id == servico.cliente_id %}selected{% endif %}>
+                                    {{ cliente.nome }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipo_servico">Tipo de Serviço:</label>
+                        <select name="tipo_servico" id="tipo_servico" required>
+                            <option value="refrigeracao" {% if servico.tipo_servico == 'refrigeracao' %}selected{% endif %}>❄️ Refrigeração</option>
+                            <option value="eletrica" {% if servico.tipo_servico == 'eletrica' %}selected{% endif %}>⚡ Elétrica</option>
+                            <option value="manutencao" {% if servico.tipo_servico == 'manutencao' %}selected{% endif %}>🔧 Manutenção Geral</option>
+                            <option value="instalacao" {% if servico.tipo_servico == 'instalacao' %}selected{% endif %}>📺 Instalação</option>
+                            <option value="reparo" {% if servico.tipo_servico == 'reparo' %}selected{% endif %}>🛠️ Reparo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="descricao">Descrição:</label>
+                        <textarea name="descricao" id="descricao" rows="4" required>{{ servico.descricao or '' }}</textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="data_servico">Data do Serviço:</label>
+                        <input type="date" name="data_servico" id="data_servico" value="{{ servico.data_servico.strftime('%Y-%m-%d') if servico.data_servico else '' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="valor">Valor (R$):</label>
+                        <input type="number" name="valor" id="valor" step="0.01" value="{{ servico.valor or '' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">Status:</label>
+                        <select name="status" id="status">
+                            <option value="pendente" {% if servico.status == 'pendente' %}selected{% endif %}>⏳ Pendente</option>
+                            <option value="em_andamento" {% if servico.status == 'em_andamento' %}selected{% endif %}>🚧 Em andamento</option>
+                            <option value="concluido" {% if servico.status == 'concluido' %}selected{% endif %}>✅ Concluído</option>
+                            <option value="cancelado" {% if servico.status == 'cancelado' %}selected{% endif %}>❌ Cancelado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="observacoes">Observações:</label>
+                        <textarea name="observacoes" id="observacoes" rows="3">{{ servico.observacoes or '' }}</textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">💾 Salvar Alterações</button>
+                    <a href="{{ url_for('buscar') }}" class="btn btn-secondary">↩️ Voltar</a>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2026 Dr. Eletron Refrigeração - Todos os direitos reservados</p>
+            <p>Site desenvolvido por Gerónimo M. Campanello</p>
+
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

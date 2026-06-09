@@ -1,4 +1,37 @@
-.venv
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
 
-*.pyc
-__pycache__
+# Flask
+instance/
+.webassets-cache
+
+# Banco de dados
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+*.pid
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Ambiente
+.env
+.venv/

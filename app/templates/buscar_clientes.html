@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar clientes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <img src="{{ url_for('static', filename='images/logo.termico.png') }}" alt="Dr. Eletron Logo" class="header-logo">
+                <div class="header-text">
+                    <h1>🔍 Buscar clientes</h1>
+                    <p>Localize clientes e visualize seus serviços</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="menu">
+            <a href="/">🏠 Início</a>
+            <a href="{{ url_for('clientes') }}">📝 Cadastrar Cliente</a>
+            <a href="{{ url_for('buscar') }}">🔍 Buscar Cliente</a>
+            <a href="{{ url_for('servicos') }}">🔧 Cadastrar Serviço</a>
+        </div>
+        
+        <div class="content">
+            <div class="card">
+                <h2>🔎 Buscar por Nome</h2>
+                <p>Digite o nome do cliente para buscar:</p>
+                
+                <form action="" method="get">
+                    <div class="form-group">
+                        <label for="pesquisa">Nome do cliente:</label>
+                        <input type="text" name="pesquisa" id="pesquisa" class="form-control" 
+                               placeholder="Digite o nome para buscar" value="{{ context.pesquisa or '' }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card">
+                <h2>📋 Resultados da busca</h2>
+                {% if context.clientes_com_servicos %}
+                    <p>Encontrados {{ context.clientes_com_servicos|length }} cliente(s):</p>
+                    <div class="results-grid">
+                        {% for item in context.clientes_com_servicos %}
+                            <div class="result-card">
+                                <h3>👤 {{ item.cliente.nome }}</h3>
+                                <p>📞 {{ item.cliente.telefone or 'Não informado' }}</p>
+                                <p>📍 {{ item.cliente.endereco or 'Não informado' }}</p>
+                                <p>📅 Cadastro: {{ item.cliente.data_cadastro.strftime('%d/%m/%Y') }}</p>
+                                <p>🔧 Total de serviços: <strong>{{ item.servicos|length }}</strong></p>
+                                
+                                <div class="action-buttons">
+                                    <a href="{{ url_for('editar_cliente', id=item.cliente.id) }}" class="btn-small btn-edit">✏️ Editar Cliente</a>
+                                    <button onclick="deletarCliente({{ item.cliente.id }}, '{{ item.cliente.nome }}')" class="btn-small btn-delete">🗑️ Excluir</button>
+                                </div>
+                                
+                                <div class="servicos-lista">
+                                    <strong>🔧 Serviços:</strong>
+                                    {% if item.servicos %}
+                                        {% for servico in item.servicos %}
+                                            <div class="servico-item">
+                                                <div class="servico-header">
+                                                    <div class="servico-content">
+                                                        <strong>{{ servico.tipo_servico | replace('_', ' ') | title }}</strong><br>
+                                                        <small class="text-muted">📅 {{ servico.data_servico.strftime('%d/%m/%Y') if servico.data_servico else 'Data não definida' }}</small><br>
+                                                        <small class="text-muted">💰 R$ {{ "%.2f"|format(servico.valor) if servico.valor else 'A combinar' }}</small><br>
+                                                        <small class="text-muted">📝 {{ servico.descricao[:80] }}{% if servico.descricao|length > 80 %}...{% endif %}</small><br>
+                                                        <span class="badge 
+                                                            {% if servico.status == 'pendente' %}badge-pendente
+                                                            {% elif servico.status == 'em_andamento' %}badge-andamento
+                                                            {% elif servico.status == 'concluido' %}badge-concluido
+                                                            {% elif servico.status == 'cancelado' %}badge-cancelado
+                                                            {% endif %}">
+                                                            {% if servico.status == 'pendente' %}⏳ Pendente
+                                                            {% elif servico.status == 'em_andamento' %}🚧 Em andamento
+                                                            {% elif servico.status == 'concluido' %}✅ Concluído
+                                                            {% elif servico.status == 'cancelado' %}❌ Cancelado
+                                                            {% endif %}
+                                                        </span>
+                                                    </div>
+                                                    <div class="servico-actions">
+                                                        <a href="{{ url_for('editar_servico', id=servico.id) }}" class="btn-small btn-edit" title="Editar serviço">✏️</a>
+                                                        <button onclick="deletarServico({{ servico.id }})" class="btn-small btn-delete" title="Excluir serviço">🗑️</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p class="text-muted mt-2">📭 Nenhum serviço cadastrado</p>
+                                        <a href="{{ url_for('servicos') }}?cliente_id={{ item.cliente.id }}" class="btn-small btn-edit mt-2">➕ Adicionar Serviço</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% elif context.pesquisa %}
+                    <p>⚠️ Nenhum cliente encontrado para "{{ context.pesquisa }}"</p>
+                    <p>💡 Deseja <a href="{{ url_for('clientes') }}">cadastrar um novo cliente</a>?</p>
+                {% else %}
+                    <p>🔍 Digite um nome para buscar clientes ou <a href="{{ url_for('clientes') }}">cadastre um novo cliente</a>.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2026 Dr. Eletron Refrigeração - Todos os direitos reservados</p>
+            <p>Site desenvolvido por Gerónimo M. Campanello</p>
+
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

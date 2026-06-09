@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Serviços</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="{{ url_for('static', filename='images/logo.termico.png') }}" alt="Dr. Eletron Logo"
+                class="header-logo">
+            <h1>🔧 Cadastro de Serviços</h1>
+            <p>Registre serviços para os clientes</p>
+        </div>
+
+        <div class="menu">
+            <a href="/">🏠 Início</a>
+            <a href="{{ url_for('clientes') }}">📝 Cadastrar Cliente</a>
+            <a href="{{ url_for('buscar') }}">🔍 Buscar Cliente</a>
+            <a href="{{ url_for('servicos') }}">🔧 Cadastrar Serviço</a>
+        </div>
+
+        <div class="content">
+            {% if mensagem %}
+            <div class="alert alert-success">
+                {{ mensagem }}
+            </div>
+            {% endif %}
+
+            <div class="card">
+                <h2>🔧 Dados do Serviço</h2>
+
+                <form action="" method="post">
+                    <div class="form-group">
+                        <label for="cliente_id">Selecionar Cliente:</label>
+                        <select name="cliente_id" id="cliente_id" required>
+                            <option value="">-- Selecione um cliente --</option>
+                            {% for cliente in clientes %}
+                            <option value="{{ cliente.id }}">{{ cliente.nome }} - {{ cliente.telefone or 'Sem telefone'
+                                }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipo_servico">Tipo de Serviço:</label>
+                        <select name="tipo_servico" id="tipo_servico" required>
+                            <option value="">-- Selecione o tipo --</option>
+                            <option value="refrigeracao">❄️ Refrigeração</option>
+                            <option value="eletrica">⚡ Elétrica</option>
+                            <option value="manutencao">🔧 Manutenção</option>
+                            <option value="instalacao">⚡ Instalação</option>
+                            <option value="reparo">🛠️ Reparo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descricao">Descrição do Serviço:</label>
+                        <textarea name="descricao" id="descricao" rows="4" required
+                            placeholder="Descreva detalhadamente o serviço..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data_servico">Data do Serviço:</label>
+                        <input type="date" name="data_servico" id="data_servico" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valor">Valor (R$):</label>
+                        <input type="number" name="valor" id="valor" step="0.01" placeholder="0,00">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status:</label>
+                        <select name="status" id="status">
+                            <option value="pendente">⏳ Pendente</option>
+                            <option value="em_andamento">🚧 Em andamento</option>
+                            <option value="concluido">✅ Concluído</option>
+                            <option value="cancelado">❌ Cancelado</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="observacoes">Observações:</label>
+                        <textarea name="observacoes" id="observacoes" rows="3"
+                            placeholder="Observações adicionais..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">💾 Cadastrar Serviço</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h2>📋 Serviços Recentes</h2>
+                {% if servicos_recentes %}
+                <div class="results-grid">
+                    {% for servico in servicos_recentes %}
+                    <div class="result-card">
+                        <h3>{{ servico.cliente.nome }}</h3>
+                        <p>🔧 {{ servico.tipo_servico }}</p>
+                        <p>📅 {{ servico.data_servico.strftime('%d/%m/%Y') if servico.data_servico else 'Data não
+                            definida' }}</p>
+                        <p>💰 R$ {{ "%.2f"|format(servico.valor) if servico.valor else 'A combinar' }}</p>
+                        <p>📊 {{ servico.status }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p>📭 Nenhum serviço cadastrado ainda.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 Dr. Eletron Refrigeração - Todos os direitos reservados</p>
+            <p>Site desenvolvido por Gerónimo M. Campanello</p>
+            
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

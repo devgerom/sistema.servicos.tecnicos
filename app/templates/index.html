@@ -3,20 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro clientes refrigeração</title>
+    <title>Dr. Eletron - Sistema</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <header>
-        <h1>Sistema de clientes de Refrigeração</h1>
-        <ol>
-            <li>Cadastrar cliente</li>
-            <li>Cadastrar serviço</li>
-        </ol>
-
-    </header>
-    <h2>Cadastrar cliente</h2>
-    <p>Aqui você vai cadastrar os dados do seu novo cliente</p>
-    <h2>Cadastrar Serviço</h2>
-    <p>Aqui você vai cadastrar o novo serviço</p>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <img src="{{ url_for('static', filename='images/logo.termico.png') }}" alt="Dr. Eletron Logo" class="header-logo">
+                <div class="header-text">
+                    <h1>Dr. Eletron</h1>
+                    <p>Soluções em Refrigeração e Elétrica</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="menu">
+            <a href="/">🏠 Início</a>
+            <a href="{{ url_for('clientes') }}">📝 Cadastrar Cliente</a>
+            <a href="{{ url_for('buscar') }}">🔍 Buscar Cliente</a>
+            <a href="{{ url_for('servicos') }}">🔧 Cadastrar Serviço</a>
+        </div>
+        
+        <div class="content">
+            <div class="card">
+                <h2>⚡ Bem-vindo!</h2>
+                <p>Sistema de gestão para serviços de refrigeração e elétrica.</p>
+                <br>
+                <p>Escolha uma opção no menu acima para começar.</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2026 Dr. Eletron Refrigeração - Todos os direitos reservados</p>
+            <p>Site desenvolvido por Gerónimo M. Campanello</p>
+        </div>
+    </div>
 </body>
 </html>
