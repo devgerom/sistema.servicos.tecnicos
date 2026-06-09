@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buscar clientes</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/dr.eletron.ico') }}">
 </head>
 <body>
     <div class="container">
@@ -58,7 +59,7 @@
                                 
                                 <div class="action-buttons">
                                     <a href="{{ url_for('editar_cliente', id=item.cliente.id) }}" class="btn-small btn-edit">✏️ Editar Cliente</a>
-                                    <button onclick="deletarCliente({{ item.cliente.id }}, '{{ item.cliente.nome }}')" class="btn-small btn-delete">🗑️ Excluir</button>
+                                    <button onclick="deletarCliente('{{ item.cliente.id }}', '{{ item.cliente.nome }}')" class="btn-small btn-delete">🗑️ Excluir</button>
                                 </div>
                                 
                                 <div class="servicos-lista">
@@ -87,7 +88,7 @@
                                                     </div>
                                                     <div class="servico-actions">
                                                         <a href="{{ url_for('editar_servico', id=servico.id) }}" class="btn-small btn-edit" title="Editar serviço">✏️</a>
-                                                        <button onclick="deletarServico({{ servico.id }})" class="btn-small btn-delete" title="Excluir serviço">🗑️</button>
+                                                        <button onclick="deletarServico('{{ servico.id }}')" class="btn-small btn-delete" title="Excluir serviço">🗑️</button>
                                                     </div>
                                                 </div>
                                             </div>
