@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dr. Eletron - Sistema</title>
+    <title>Dr. Eletron - Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/dr.eletron.ico') }}">
 </head>
@@ -13,25 +13,104 @@
             <div class="header-content">
                 <img src="{{ url_for('static', filename='images/logo.termico.png') }}" alt="Dr. Eletron Logo" class="header-logo">
                 <div class="header-text">
-                    <h1>Dr. Eletron</h1>
-                    <p>Soluções em Refrigeração e Elétrica</p>
+                    <h1>📊 Dr. Eletron</h1>
+                    <p>Painel de Controle - Serviços de Refrigeração e Elétrica</p>
                 </div>
             </div>
         </div>
         
         <div class="menu">
-            <a href="/">🏠 Início</a>
+            <a href="/">🏠 Dashboard</a>
             <a href="{{ url_for('clientes') }}">📝 Cadastrar Cliente</a>
             <a href="{{ url_for('buscar') }}">🔍 Buscar Cliente</a>
             <a href="{{ url_for('servicos') }}">🔧 Cadastrar Serviço</a>
         </div>
         
         <div class="content">
+            <!-- Boas vindas -->
+            <div class="dashboard-welcome">
+                <h2>⚡ Bem-vindo ao Dr. Eletron Refrigeração!</h2>
+                <p>Sistema de Gestão para Serviços Técnicos</p>
+            </div>
+            
+            <!-- Cards de estatísticas -->
+            <div class="stats-grid">
+                <div class="stat-card total">
+                    <div class="stat-number">{{ context.total_clientes }}</div>
+                    <div class="stat-label">👥 Clientes</div>
+                </div>
+                
+                <div class="stat-card total">
+                    <div class="stat-number">{{ context.total_servicos }}</div>
+                    <div class="stat-label">🔧 Total Serviços</div>
+                </div>
+                
+                <div class="stat-card pendente">
+                    <div class="stat-number">{{ context.servicos_pendentes }}</div>
+                    <div class="stat-label">⏳ Serviços Pendentes</div>
+                </div>
+                
+                <div class="stat-card andamento">
+                    <div class="stat-number">{{ context.servicos_andamento }}</div>
+                    <div class="stat-label">🚧 Em Andamento</div>
+                </div>
+                
+                <div class="stat-card concluido">
+                    <div class="stat-number">{{ context.servicos_concluidos }}</div>
+                    <div class="stat-label">✅ Concluídos</div>
+                </div>
+                
+                <div class="stat-card total">
+                    <div class="stat-number">R$ {{ "%.2f"|format(context.faturamento_total) }}</div>
+                    <div class="stat-label">💰 Faturamento Total</div>
+                </div>
+            </div>
+            
+            <!-- Serviços Pendentes Recentes -->
             <div class="card">
-                <h2>⚡ Bem-vindo!</h2>
-                <p>Sistema de gestão para serviços de refrigeração e elétrica.</p>
-                <br>
-                <p>Escolha uma opção no menu acima para começar.</p>
+                <h2>⏳ Serviços Pendentes Recentes</h2>
+                {% if context.servicos_recentes_pendentes %}
+                    {% for servico in context.servicos_recentes_pendentes %}
+                        <div class="servico-pendente-item">
+                            <strong>🔧 {{ servico.tipo_servico | replace('_', ' ') | title }}</strong><br>
+                            <small>👤 Cliente: {{ servico.cliente.nome }}</small><br>
+                            <small>📅 Data: {{ servico.data_servico.strftime('%d/%m/%Y') if servico.data_servico else 'Não agendada' }}</small><br>
+                            <small>💰 Valor: R$ {{ "%.2f"|format(servico.valor) if servico.valor else 'A combinar' }}</small>
+                        </div>
+                    {% endfor %}
+                    <a href="{{ url_for('buscar') }}" class="view-all-link">🔍 Ver todos os clientes →</a>
+                {% else %}
+                    <p>🎉 Nenhum serviço pendente! Todos os serviços estão em dia!</p>
+                {% endif %}
+            </div>
+            
+            <!-- Resumo rápido -->
+            <div class="card">
+                <h2>📈 Resumo do Negócio</h2>
+                <div class="resumo-grid">
+                    <div class="resumo-item">
+                        <strong>📊 Taxa de conclusão:</strong><br>
+                        {% if context.total_servicos > 0 %}
+                            {% set taxa = (context.servicos_concluidos / context.total_servicos * 100) | round %}
+                            <span class="resumo-valor concluido">{{ taxa }}%</span>
+                        {% else %}
+                            <span>0%</span>
+                        {% endif %}
+                    </div>
+                    <div class="resumo-item">
+                        <strong>🔄 Em aberto:</strong><br>
+                        <span class="resumo-valor pendente">{{ context.total_em_aberto }}</span>
+                    </div>
+                    <div class="resumo-item">
+                        <strong>⭐ Ticket médio:</strong><br>
+                        {% if context.servicos_concluidos > 0 %}
+                            {% set ticket = context.faturamento_total / context.servicos_concluidos %}
+                            <span class="resumo-valor total">R$ {{ "%.2f"|format(ticket) }}</span>
+                        {% else %}
+                            <span>R$ 0,00</span>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -40,5 +119,7 @@
             <p>Site desenvolvido por Gerónimo M. Campanello</p>
         </div>
     </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

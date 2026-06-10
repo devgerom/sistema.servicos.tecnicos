@@ -447,3 +447,114 @@ select:focus {
         width: 100%;
     }
 }
+
+/* ==================== DASHBOARD / ESTATÍSTICAS ==================== */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, var(--azul-medio) 0%, var(--azul-escuro) 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+.stat-number {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.stat-card.pendente { 
+    background: linear-gradient(135deg, #eab308, #ca8a04); 
+}
+
+.stat-card.andamento { 
+    background: linear-gradient(135deg, #3b82f6, #2563eb); 
+}
+
+.stat-card.concluido { 
+    background: linear-gradient(135deg, #22c55e, #16a34a); 
+}
+
+.stat-card.total { 
+    background: linear-gradient(135deg, var(--laranja), var(--laranja-escuro)); 
+}
+
+/* Serviços pendentes */
+.servico-pendente-item {
+    background: #fef3c7;
+    border-left: 4px solid #eab308;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    transition: transform 0.2s;
+}
+
+.servico-pendente-item:hover {
+    transform: translateX(5px);
+}
+
+.servico-pendente-item strong {
+    color: #854d0e;
+}
+
+.servico-pendente-item small {
+    color: #92400e;
+}
+
+.view-all-link {
+    display: inline-block;
+    margin-top: 15px;
+    color: var(--laranja);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.view-all-link:hover {
+    text-decoration: underline;
+}
+
+.dashboard-welcome {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    border-left: 4px solid var(--laranja);
+}
+
+.resumo-grid {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.resumo-item {
+    text-align: center;
+}
+
+.resumo-valor {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.resumo-valor.concluido { color: #22c55e; }
+.resumo-valor.pendente { color: #eab308; }
+.resumo-valor.total { color: var(--laranja); }

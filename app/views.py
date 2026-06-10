@@ -2,11 +2,45 @@ from app import app, db
 from app.models import Cliente, Servico
 from flask import render_template, url_for, request
 from datetime import datetime
+from sqlalchemy import func
 
 @app.route('/')
-
 def homepage():
-    return render_template('index.html')
+    # Estatísticas gerais
+    total_clientes = Cliente.query.count()
+    total_servicos = Servico.query.count()
+    
+    # Serviços por status
+    servicos_pendentes = Servico.query.filter_by(status='pendente').count()
+    servicos_andamento = Servico.query.filter_by(status='em_andamento').count()
+    servicos_concluidos = Servico.query.filter_by(status='concluido').count()
+    servicos_cancelados = Servico.query.filter_by(status='cancelado').count()
+    
+    # Serviços pendentes recentes (últimos 5)
+    servicos_recentes_pendentes = Servico.query.filter_by(status='pendente').order_by(Servico.data_servico.desc()).limit(5).all()
+    
+    # Total em aberto (pendentes + em andamento)
+    total_em_aberto = servicos_pendentes + servicos_andamento
+    
+    # Calcular faturamento total (serviços concluídos)
+    faturamento_total = db.session.query(func.sum(Servico.valor)).filter_by(status='concluido').scalar() or 0
+    
+    context = {
+        'total_clientes': total_clientes,
+        'total_servicos': total_servicos,
+        'servicos_pendentes': servicos_pendentes,
+        'servicos_andamento': servicos_andamento,
+        'servicos_concluidos': servicos_concluidos,
+        'servicos_cancelados': servicos_cancelados,
+        'total_em_aberto': total_em_aberto,
+        'faturamento_total': faturamento_total,
+        'servicos_recentes_pendentes': servicos_recentes_pendentes
+    }
+    
+    return render_template('index.html', context=context)
+
+
+
 
 @app.route('/clientes', methods=['GET','POST'])
 def clientes():
